@@ -29,3 +29,13 @@ Download or clone https://github.com/nlabrador/WetWalk.git
         //Call my old MyClass object 
     }
 ```
+
+###Test it out
+This will create a new file tests/files/DryRun/TestConvertClass.php
+`php console create:dryrun --other-methods=otherMethod tests/files/TestConvertClass.php`
+
+This will create a new file tests/files/DryRun/TestNamespaceConvertClass.php
+`php console create:dryrun --other-methods=otherMethod tests/files/TestNamespaceConvertClass.php`
+
+This will create a new file tests/files/DryRun/testscript.php
+`php console create:dryrun --other-methods=otherMethod tests/files/testscript.php`
