@@ -9,7 +9,8 @@ Once you already have "dryrun" version all you need is to call them in your scri
 
 ###Installation
 Download or clone https://github.com/nlabrador/WetWalk.git
-`cd WetWalk_direcory`
+`cd WetWalk_directory`
+
 `composer install`
 
 ###Usage
