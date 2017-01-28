@@ -1,7 +1,7 @@
 <?php
 
 /**
- * WetWalk\Transform class - Parse PHP file and traverse to find method calls to convert into echo call
+ * WetWalk\MakeDry class - Parse PHP file and traverse to find method calls to convert into echo call
  *
  * Author: Nino Labrador (nino.labrador@codingavenue.com)
  */
@@ -49,13 +49,9 @@ class MakeDry
             echo "Converting file $filename...";
 
             foreach ($code as $c_index => $object) {
-                echo "...";
-
                 if (get_class($object) == 'PhpParser\Node\Stmt\Namespace_') {
                     $isclass = true;
                     foreach ($object->stmts as $index => $line) {
-                        echo "...";
-                        
                         if (get_class($line) == 'PhpParser\Node\Stmt\Class_') {
                             $code[$c_index]->stmts[$index] = $this->convertClass($line);
                         }
@@ -63,16 +59,12 @@ class MakeDry
                 }
                 
                 if (get_class($object) == 'PhpParser\Node\Stmt\Class_') {
-                    echo "...";
-
                     $isclass = true;
                     $code[$c_index] = $this->convertClass($object);
                 }
             }
 
             if (!$isclass) {
-                echo "...";
-
                 $code = $this->convertScript($code);
             }
             
