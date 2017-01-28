@@ -1,5 +1,5 @@
 # WetWalk
-WetWalk PHP Library that parses PHP files and transforms into a "dry-run" (echo) mode
+WetWalk PHP Command-line tool that parses PHP files and transforms into a "dry-run" (echo) mode
 
 This will help to easily create a "dryrun" version of your classes or scripts. It finds function or method calls and convert that call into an echo with the function call to display.
 
