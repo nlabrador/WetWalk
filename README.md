@@ -7,14 +7,14 @@ If your scripts or classes is calling system commands like `exec`, `mkdir`, `sys
 
 Once you already have "dryrun" version all you need is to call them in your scripts where applicable.
 
-###Installation
+## Installation
 Download or clone https://github.com/nlabrador/WetWalk.git
 
 `cd WetWalk_directory`
 
 `composer install`
 
-###Usage
+## Usage
 `php console create:dryrun --other-methods=otherMethod tests/files/TestConvertClass.php`
 
 `php console create:dryrun --other-methods=otherMethod tests/files/TestNamespaceConvertClass.php`
@@ -23,7 +23,7 @@ Download or clone https://github.com/nlabrador/WetWalk.git
 
 `php console create:dryrun --help`
 
-###Example usage of the "DryRun" converted file
+## Example usage of the "DryRun" converted file
 ```php
     if ($mode == 'dryrun')
     {
@@ -34,7 +34,7 @@ Download or clone https://github.com/nlabrador/WetWalk.git
     }
 ```
 
-###Test it out
+## Test it out
 `php console create:dryrun --other-methods=otherMethod tests/files/TestConvertClass.php`
 
 The above command creates a new file tests/files/DryRun/TestConvertClass.php
