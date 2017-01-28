@@ -31,11 +31,14 @@ Download or clone https://github.com/nlabrador/WetWalk.git
 ```
 
 ###Test it out
-This will create a new file tests/files/DryRun/TestConvertClass.php
 `php console create:dryrun --other-methods=otherMethod tests/files/TestConvertClass.php`
 
-This will create a new file tests/files/DryRun/TestNamespaceConvertClass.php
+The above command creates a new file tests/files/DryRun/TestConvertClass.php
+
 `php console create:dryrun --other-methods=otherMethod tests/files/TestNamespaceConvertClass.php`
 
-This will create a new file tests/files/DryRun/testscript.php
+The above command creates a new file tests/files/DryRun/TestNamespaceConvertClass.php
+
 `php console create:dryrun --other-methods=otherMethod tests/files/testscript.php`
+
+The above command creates a new file tests/files/DryRun/testscript.php
