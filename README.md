@@ -1,7 +1,7 @@
 # WetWalk
 WetWalk PHP Command-line tool that parses PHP files and transforms into a "dry-run" (echo) mode
 
-This will help to easily create a "dryrun" version of your classes or scripts. It finds function or method calls and convert that call into an echo with the function call to display.
+This helps create a "dryrun" version of your classes or scripts. It finds function or method calls and convert that call into `echo` with the function call to display. Instead of running or execute the call we replace it with `echo` to show us what function call we are supposed to execute.
 
 If your scripts or classes is calling system commands like `exec`, `mkdir`, `system`, etc. Creating a "dryrun" version of them is the best way to test them out.
 
