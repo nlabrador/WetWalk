@@ -20,6 +20,8 @@ Download or clone https://github.com/nlabrador/WetWalk.git
 
 `php console create:dryrun --other-methods=otherMethod tests/files/testscript.php`
 
+`php console create:dryrun --help`
+
 ###Example usage of the "DryRun" converted file
 ```php
     if ($mode == 'dryrun')
