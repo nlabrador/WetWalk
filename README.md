@@ -14,7 +14,9 @@ Download or clone https://github.com/nlabrador/WetWalk.git
 
 ###Usage
 `php console create:dryrun --other-methods=otherMethod tests/files/TestConvertClass.php`
+
 `php console create:dryrun --other-methods=otherMethod tests/files/TestNamespaceConvertClass.php`
+
 `php console create:dryrun --other-methods=otherMethod tests/files/testscript.php`
 
 ###Example usage of the "DryRun" converted file
