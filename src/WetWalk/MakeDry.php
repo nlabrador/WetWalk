@@ -18,16 +18,19 @@ class MakeDry
 {
     protected $target;
     protected $methods;
+    protected $skip_methods;
 
     /**
      * Constructor Method
      * @param $target [string] - PHP Full file path to be parsed
      * @param $methods [array] - Other non built-in methods to be converted to echo
+     * @param $skip_methods [array] - Skip these method calls
      */
-    public function __construct($target, $methods = [])
+    public function __construct($target, $methods = [], $skip_methods = [])
     {
         $this->target  = $target;
         $this->methods = $methods;
+        $this->skip_methods = $skip_methods;
     }
 
     /**
@@ -98,14 +101,7 @@ class MakeDry
                     if (isset($method_line->stmts)) {
                         $code_line->stmts[$index] = $this->methodCalls($method_line);
                     } else {
-                        if (get_class($method_line) == 'PhpParser\Node\Expr\FuncCall') {
-                            $code_line->stmts[$index] = $this->funcCall($method_line);
-                        }
-                        if (get_class($method_line) == 'PhpParser\Node\Expr\MethodCall') {
-                            if (in_array($method_line->name, $this->methods)) {
-                                $code_line->stmts[$index] = $this->funcCall($method_line);
-                            }
-                        }
+                        $code_line->stmts[$index] = $this->checkUpdateCode($method_line);
                     }
                 }
             }
@@ -127,18 +123,48 @@ class MakeDry
             if (isset($code_line->stmts)) {
                 $code_lines[$index] = $this->methodCalls($code_line);
             } else {
-                if (get_class($code_line) == 'PhpParser\Node\Expr\FuncCall') {
-                    $code_lines[$index] = $this->funcCall($code_line);
-                }
-                if (get_class($code_line) == 'PhpParser\Node\Expr\MethodCall') {
-                    if (in_array($code_line->name, $this->methods)) {
-                        $code_lines[$index] = $this->funcCall($code_line);
-                    }
-                }
+                $code_lines[$index] = $this->checkUpdateCode($code_line);
             }
         }
 
         return $code_lines;
+    }
+
+    /**
+     * Check line if function call or method call and convert to echo
+     */
+    public function checkUpdateCode($code_line) {
+        $append_echo    = null;
+        $orig_code_line = $code_line;
+
+        if (get_class($code_line) == 'PhpParser\Node\Expr\Assign') {
+            $code_line = $code_line->expr;
+
+            $function = null;
+            if (get_class($code_line) == 'PhpParser\Node\Expr\MethodCall') {
+                $function = $code_line->name;
+            }
+            if (get_class($code_line) == 'PhpParser\Node\Expr\FuncCall') {
+                $function = $code_line->name->parts[0];
+            }
+        
+            if ($function && in_array($function, $this->skip_methods)) {
+                return $orig_code_line;
+            }
+
+            $append_echo = new String_("Assign variable to function call "); 
+        }
+
+        if (get_class($code_line) == 'PhpParser\Node\Expr\FuncCall') {
+            return $this->convertEcho($code_line, $append_echo);
+        }
+        if (get_class($code_line) == 'PhpParser\Node\Expr\MethodCall') {
+            if (in_array($code_line->name, $this->methods)) {
+                return $this->convertEcho($code_line, $append_echo);
+            }
+        }
+
+        return $orig_code_line;
     }
 
     /**
@@ -164,14 +190,7 @@ class MakeDry
             if (isset($inner_line->stmts)) {
                 $method_line->stmts[$index] = $this->methodCalls($inner_line);
             } else {
-                if (get_class($inner_line) == 'PhpParser\Node\Expr\FuncCall') {
-                    $method_line->stmts[$index] = $this->funcCall($inner_line);
-                }
-                if (get_class($inner_line) == 'PhpParser\Node\Expr\MethodCall') {
-                    if (in_array($inner_line->name, $this->methods)) {
-                        $method_line->stmts[$index] = $this->funcCall($inner_line);
-                    }
-                }
+                $method_line->stmts[$index] = $this->checkUpdateCode($inner_line);
             }
         }
 
@@ -181,21 +200,37 @@ class MakeDry
     /**
      * Handles the convertion of function/method call into echo
      * @param $method_line - PhpParser\Node\Expr\MethodCall(FuncCall)
+     * @param $append_echo - PhpParser\Node\Expr\Echo_ object
      *
      * returns new PhpParser\Node\Expr\Echo_ object
      */
-    public function funcCall($method_line)
+    public function convertEcho($method_line, $append_echo = null)
     {
         if (get_class($method_line) == 'PhpParser\Node\Expr\MethodCall') {
             $function = $method_line->name;
         } else {
             $function = $method_line->name->parts[0];
         }
+        
+        if (in_array($function, $this->skip_methods)) {
+            return $method_line;
+        }
 
-        $echo_params = [ new String_("{$function}(") ];
+        $echo_params = [];
 
-        foreach ($method_line->args as $arg) {
-            $echo_params[] = $arg->value;
+        if ($append_echo) {
+            $echo_params[] = $append_echo;
+        }
+
+        $echo_params[] = new String_("{$function}(");
+
+        if ($function == 'exec') {
+            $echo_params[] = $method_line->args[0]->value;
+        }
+        else {
+            foreach ($method_line->args as $arg) {
+                $echo_params[] = $arg->value;
+            }
         }
 
         $echo_params[] = new String_(')');

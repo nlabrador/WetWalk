@@ -13,9 +13,10 @@ class TestConvertClass
     {
         system("ls");
 
+        $test = $this->otherMethod();
         if ($this->private) {
             system("ls");
-            $this->otherMethod();
+            $test = $this->otherMethod();
         } else {
             system("ls");
         }

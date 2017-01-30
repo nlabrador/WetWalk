@@ -33,6 +33,12 @@ class CreateDryRun extends Command
                 InputOption::VALUE_OPTIONAL,
                 'Other custom created methods not in PHP built-in methods. Comma separated values.'
             )
+            ->addOption(
+                'skip-methods',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Method calls to skip. Comma separated values.'
+            )
         ;
     }
 
@@ -43,8 +49,9 @@ class CreateDryRun extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $options = explode(",", $input->getOptions()['other-methods']);
+        $skip    = explode(",", $input->getOptions()['skip-methods']);
 
-        $makedry = new MakeDry($input->getArgument('target_path'), $options);
+        $makedry = new MakeDry($input->getArgument('target_path'), $options, $skip);
         $makedry->convert();
     }
 }

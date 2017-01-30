@@ -1,5 +1,7 @@
 <?php
 
+$test = system("ls");
+
 system("ls");
 
 if (true) {
