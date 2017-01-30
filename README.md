@@ -23,6 +23,8 @@ Download or clone https://github.com/nlabrador/WetWalk.git
 
 `php console create:dryrun --help`
 
+After the commands you can update the DryRun versions of class namespace to match you project namespaces.
+
 ## Example usage of the "DryRun" converted file
 ```php
     if ($mode == 'dryrun')
